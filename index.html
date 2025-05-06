@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدارة مستفيدين التبرعات</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-5xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
+    <h1 class="text-xl font-bold mb-4">إدارة مستفيدين التبرعات</h1>
+
+    <button id="addBtn" class="mb-4 bg-blue-600 text-white px-4 py-2 rounded">إضافة مستفيد جديد</button>
+    <button id="printBtn" class="mb-4 bg-green-600 text-white px-4 py-2 rounded">طباعة</button>
+
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white p-6 rounded-2xl w-full max-w-lg">
+        <h3 id="modalTitle" class="text-lg font-bold mb-4">إضافة مستفيد</h3>
+        <form id="recipient-form" class="flex flex-col gap-4">
+          <input type="text" id="name" placeholder="اسم المستفيد" required class="border p-2 rounded" />
+          <input type="tel" id="phone" placeholder="رقم الهاتف" required class="border p-2 rounded" pattern="0[0-9]{10}" title="رقم هاتف مكون من 11 رقم يبدأ بـ0" />
+          <input type="text" id="nationalId" placeholder="الرقم القومي" required class="border p-2 rounded" pattern="\d{14}" title="الرقم القومي مكون من 14 رقم" />
+
+          <div class="flex flex-col gap-2">
+            <label class="flex items-center gap-2">
+              <input type="checkbox" name="item" value="ملابس" id="chkClothes" /> ملابس
+              <input type="number" id="clothesQty" placeholder="عدد القطع" class="border p-1 rounded hidden w-32" min="1" />
+            </label>
+            <label class="flex items-center gap-2">
+              <input type="checkbox" name="item" value="مال" /> مال
+            </label>
+            <label class="flex items-center gap-2">
+              <input type="checkbox" name="item" value="طعام" id="chkFood" /> طعام
+              <input type="number" id="foodQty" placeholder="عدد الوجبات" class="border p-1 rounded hidden w-32" min="1" />
+            </label>
+          </div>
+
+          <input type="number" id="amount" placeholder="المبلغ (اختياري)" min="0" class="border p-2 rounded" />
+
+          <label class="flex flex-col">
+            <span>تحميل مرفق (اختياري)</span>
+            <input type="file" id="attachment" accept="image/*" />
+          </label>
+          <div class="flex justify-end gap-4 mt-4">
+            <button type="button" id="cancelBtn" class="px-4 py-2 bg-gray-300 rounded">إلغاء</button>
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">حفظ</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- جدول عرض البيانات -->
+    <div id="recipientsTable" class="mt-8">
+      <h2 class="text-lg font-bold mb-4">قائمة المستفيدين</h2>
+      <table class="w-full text-sm table-auto border">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="border p-2">الاسم</th>
+            <th class="border p-2">الهاتف</th>
+            <th class="border p-2">الرقم القومي</th>
+            <th class="border p-2">المساعدات</th>
+            <th class="border p-2">التوقيع</th>
+            <th class="border p-2">الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('modal');
+    const form = document.getElementById('recipient-form');
+    const addBtn = document.getElementById('addBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const chkClothes = document.getElementById('chkClothes');
+    const clothesQty = document.getElementById('clothesQty');
+    const chkFood = document.getElementById('chkFood');
+    const foodQty = document.getElementById('foodQty');
+    const tableBody = document.getElementById('tableBody');
+    const printBtn = document.getElementById('printBtn');
+
+    let recipients = [];
+
+    function saveToLocalStorage() {
+      localStorage.setItem('donationRecipients', JSON.stringify(recipients));
+    }
+
+    function loadFromLocalStorage() {
+      const data = localStorage.getItem('donationRecipients');
+      if (data) {
+        recipients = JSON.parse(data);
+        updateTable();
+      }
+    }
+
+    function openModal() {
+      form.reset();
+      clothesQty.classList.add('hidden');
+      foodQty.classList.add('hidden');
+      modal.classList.remove('hidden');
+    }
+
+    addBtn.onclick = openModal;
+    cancelBtn.onclick = () => modal.classList.add('hidden');
+
+    chkClothes.onchange = () => clothesQty.classList.toggle('hidden', !chkClothes.checked);
+    chkFood.onchange = () => foodQty.classList.toggle('hidden', !chkFood.checked);
+
+    function updateTable() {
+      tableBody.innerHTML = "";
+      recipients.forEach((rec, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="border p-2">${rec.name}</td>
+          <td class="border p-2">${rec.phone}</td>
+          <td class="border p-2">${rec.nationalId}</td>
+          <td class="border p-2">
+            ${rec.items.join(', ')}
+            ${rec.clothesQty ? ` - ${rec.clothesQty} قطع` : ''}
+            ${rec.foodQty ? ` - ${rec.foodQty} وجبات` : ''}
+          </td>
+          <td class="border p-2">...........</td>
+          <td class="border p-2">
+            <button class="bg-red-500 text-white px-2 py-1 rounded" onclick="deleteRecipient(${index})">حذف</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function deleteRecipient(index) {
+      recipients.splice(index, 1);
+      saveToLocalStorage();
+      updateTable();
+    }
+
+    form.onsubmit = e => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const nationalId = document.getElementById('nationalId').value;
+      const amount = document.getElementById('amount').value;
+      const items = Array.from(document.querySelectorAll('input[name="item"]:checked')).map(el => el.value);
+      const attachment = document.getElementById('attachment').files[0];
+
+      const details = {
+        name,
+        phone,
+        nationalId,
+        amount,
+        items,
+        clothesQty: chkClothes.checked ? clothesQty.value : null,
+        foodQty: chkFood.checked ? foodQty.value : null,
+        attachment: attachment ? attachment.name : null,
+      };
+
+      recipients.push(details);
+      saveToLocalStorage();
+      updateTable();
+      modal.classList.add('hidden');
+    };
+
+    printBtn.onclick = () => window.print();
+
+    // تحميل البيانات المحفوظة عند بداية التشغيل
+    window.onload = loadFromLocalStorage;
+  </script>
+<h1>
+</body>
+</html>
