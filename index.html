@@ -13,21 +13,10 @@
     .header {
       background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
     }
-    .logo-placeholder {
-      width: 60px;
-      height: 60px;
-      background-color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid #fff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .signature-box {
-      border-top: 1px dashed #ccc;
-      margin-top: 30px;
-      padding-top: 15px;
+    .star-icon {
+      color: gold;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+      font-size: 2.5rem;
     }
     @media print {
       body {
@@ -40,50 +29,58 @@
         page-break-inside: avoid;
       }
     }
+    @media (max-width: 640px) {
+      .responsive-flex {
+        flex-direction: column;
+      }
+      .responsive-text {
+        font-size: 1.5rem;
+      }
+    }
   </style>
 </head>
-<body class="bg-gray-100 p-6">
+<body class="bg-gray-100 p-4 sm:p-6">
   <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
     <!-- Header with Charity Info -->
-    <div class="header text-white p-6 text-center">
-      <div class="flex justify-center items-center mb-4">
-        <!-- مكان لشعار الجمعية -->
-        <div class="logo-placeholder mr-3">
-          <img src="logo.png" alt="شعار جمعية نجمة حلوان الخيرية" class="w-12 h-12 rounded-full" onerror="this.style.display='none'; document.querySelector('.logo-placeholder').innerHTML='<span class=\'text-blue-600 font-bold\'>نجمة</span>'">
+    <div class="header text-white p-4 sm:p-6 text-center">
+      <div class="flex justify-center items-center mb-4 responsive-flex">
+        <!-- نجمة الجمعية -->
+        <div class="star-icon mr-3">
+          ★
         </div>
         <div>
-          <h1 class="text-2xl font-bold">جمعية نجمة حلوان الخيرية</h1>
-          <p class="text-blue-200">إدارة مستفيدين التبرعات</p>
+          <h1 class="text-xl sm:text-2xl font-bold responsive-text">جمعية نجمة حلوان الخيرية</h1>
+          <p class="text-blue-200 text-sm sm:text-base">إدارة مستفيدين التبرعات</p>
         </div>
       </div>
     </div>
 
-    <div class="p-6">
+    <div class="p-4 sm:p-6">
       <!-- لوحة التحكم الإحصائية -->
-      <div id="dashboard" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 no-print">
+      <div id="dashboard" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 no-print">
         <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
           <h3 class="font-bold text-blue-800">إجمالي المستفيدين</h3>
-          <p id="totalRecipients" class="text-2xl font-bold">0</p>
+          <p id="totalRecipients" class="text-xl sm:text-2xl font-bold">0</p>
         </div>
         <div class="bg-green-50 p-4 rounded-lg border border-green-100">
           <h3 class="font-bold text-green-800">المساعدات العينية</h3>
-          <p id="materialAid" class="text-2xl font-bold">0</p>
+          <p id="materialAid" class="text-xl sm:text-2xl font-bold">0</p>
         </div>
         <div class="bg-purple-50 p-4 rounded-lg border border-purple-100">
           <h3 class="font-bold text-purple-800">المساعدات المالية</h3>
-          <p id="financialAid" class="text-2xl font-bold">0</p>
+          <p id="financialAid" class="text-xl sm:text-2xl font-bold">0</p>
         </div>
       </div>
 
       <!-- أدوات التصدير والاستيراد -->
-      <div class="flex gap-2 mb-4 no-print">
-        <button onclick="exportData()" class="bg-green-500 text-white px-4 py-2 rounded flex items-center gap-1">
+      <div class="flex flex-col sm:flex-row gap-2 mb-4 no-print">
+        <button onclick="exportData()" class="flex items-center justify-center gap-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg>
           تصدير البيانات
         </button>
-        <button onclick="document.getElementById('importFile').click()" class="bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-1">
+        <button onclick="document.getElementById('importFile').click()" class="flex items-center justify-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg>
@@ -95,9 +92,9 @@
       <!-- نظام الفلترة والبحث -->
       <div class="mb-4 no-print">
         <input type="text" id="searchInput" placeholder="ابحث عن مستفيد..." 
-              class="border p-2 rounded w-full md:w-1/2" oninput="filterRecipients()">
+              class="border p-2 rounded w-full" oninput="filterRecipients()">
               
-        <select id="aidTypeFilter" class="border p-2 rounded mt-2" onchange="filterRecipients()">
+        <select id="aidTypeFilter" class="border p-2 rounded mt-2 w-full sm:w-auto" onchange="filterRecipients()">
           <option value="">كل أنواع المساعدات</option>
           <option value="ملابس">ملابس</option>
           <option value="مال">مال</option>
@@ -106,16 +103,16 @@
         </select>
       </div>
 
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-bold text-gray-800">سجل المستفيدين</h2>
-        <div class="flex gap-2">
-          <button id="addBtn" class="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded no-print">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
+        <h2 class="text-lg sm:text-xl font-bold text-gray-800">سجل المستفيدين</h2>
+        <div class="flex gap-2 w-full sm:w-auto">
+          <button id="addBtn" class="flex items-center justify-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded no-print w-full sm:w-auto">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
             </svg>
             إضافة مستفيد
           </button>
-          <button id="printBtn" class="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded no-print">
+          <button id="printBtn" class="flex items-center justify-center gap-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded no-print w-full sm:w-auto">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
             </svg>
@@ -126,7 +123,7 @@
 
       <!-- Modal -->
       <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 no-print">
-        <div class="bg-white p-6 rounded-2xl w-full max-w-lg">
+        <div class="bg-white p-4 sm:p-6 rounded-2xl w-full max-w-lg mx-4">
           <div class="flex justify-between items-center mb-4">
             <h3 id="modalTitle" class="text-lg font-bold text-gray-800">إضافة مستفيد جديد</h3>
             <button id="closeModal" class="text-gray-500 hover:text-gray-700">
@@ -137,7 +134,7 @@
           </div>
           
           <form id="recipient-form" class="flex flex-col gap-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label for="name" class="block text-sm font-medium text-gray-700 mb-1">اسم المستفيد</label>
                 <input type="text" id="name" placeholder="اسم المستفيد" required class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
@@ -155,7 +152,7 @@
             
             <div class="border-t pt-4">
               <h4 class="font-medium text-gray-700 mb-2">نوع المساعدة</h4>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <label class="flex items-center gap-2 p-2 border rounded hover:bg-gray-50">
                   <input type="checkbox" name="item" value="ملابس" id="chkClothes" class="rounded text-blue-600" />
                   <span>ملابس</span>
@@ -208,12 +205,12 @@
         <table class="w-full text-sm border-collapse">
           <thead class="bg-gray-100">
             <tr>
-              <th class="border p-3 text-right">الاسم</th>
-              <th class="border p-3">الهاتف</th>
-              <th class="border p-3">الرقم القومي</th>
-              <th class="border p-3">نوع المساعدة</th>
-              <th class="border p-3">التوقيع</th>
-              <th class="border p-3 no-print">الإجراءات</th>
+              <th class="border p-2 sm:p-3 text-right">الاسم</th>
+              <th class="border p-2 sm:p-3">الهاتف</th>
+              <th class="border p-2 sm:p-3">الرقم القومي</th>
+              <th class="border p-2 sm:p-3">نوع المساعدة</th>
+              <th class="border p-2 sm:p-3">التوقيع</th>
+              <th class="border p-2 sm:p-3 no-print">الإجراءات</th>
             </tr>
           </thead>
           <tbody id="tableBody" class="bg-white">
@@ -224,7 +221,7 @@
 
       <!-- Footer -->
       <footer class="mt-8 pt-4 border-t text-center text-sm text-gray-500 no-print">
-        <div class="flex justify-around items-center mt-6 signature-box">
+        <div class="flex flex-col sm:flex-row justify-around items-center mt-6 signature-box gap-4">
           <div>
             <p class="mb-1">رئيس مجلس الإدارة</p>
             <p class="font-bold">.....................</p>
@@ -346,7 +343,7 @@
     };
 
     function updateTable() {
-      filterRecipients(); // This will render the filtered table
+      filterRecipients();
     }
 
     function filterRecipients() {
@@ -382,22 +379,22 @@
         const row = document.createElement('tr');
         row.className = 'hover:bg-gray-50';
         row.innerHTML = `
-          <td class="border p-3">${rec.name}</td>
-          <td class="border p-3">${rec.phone}</td>
-          <td class="border p-3">${rec.nationalId}</td>
-          <td class="border p-3">
+          <td class="border p-2 sm:p-3">${rec.name}</td>
+          <td class="border p-2 sm:p-3">${rec.phone}</td>
+          <td class="border p-2 sm:p-3">${rec.nationalId}</td>
+          <td class="border p-2 sm:p-3">
             ${rec.items.join('، ')}
             ${rec.clothesQty ? ` (${rec.clothesQty} قطعة)` : ''}
             ${rec.foodQty ? ` (${rec.foodQty} وجبة)` : ''}
             ${rec.amount ? ` - ${rec.amount} ج.م` : ''}
           </td>
-          <td class="border p-3 text-gray-500 italic">.................</td>
-          <td class="border p-3 no-print">
+          <td class="border p-2 sm:p-3 text-gray-500 italic">.................</td>
+          <td class="border p-2 sm:p-3 no-print">
             <div class="flex gap-2 justify-center">
-              <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs" onclick="openModal(${recipients.indexOf(rec)})">
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 sm:px-3 py-1 rounded text-xs" onclick="openModal(${recipients.indexOf(rec)})">
                 تعديل
               </button>
-              <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs" onclick="deleteRecipient(${recipients.indexOf(rec)})">
+              <button class="bg-red-500 hover:bg-red-600 text-white px-2 sm:px-3 py-1 rounded text-xs" onclick="deleteRecipient(${recipients.indexOf(rec)})">
                 حذف
               </button>
             </div>
@@ -502,7 +499,7 @@
             th { background-color: #f2f2f2; }
             .header { text-align: center; margin-bottom: 30px; }
             .logo-container { display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
-            .logo { width: 80px; height: 80px; object-fit: contain; margin-left: 15px; }
+            .star-icon { font-size: 2rem; color: gold; margin-left: 15px; }
             .date { text-align: left; margin-top: 30px; }
             .signatures { display: flex; justify-content: space-around; margin-top: 40px; }
           </style>
@@ -510,7 +507,7 @@
         <body>
           <div class="header">
             <div class="logo-container">
-              <img src="logo.png" alt="شعار الجمعية" class="logo" onerror="this.style.display='none'">
+              <div class="star-icon">★</div>
               <div>
                 <div style="font-size: 24px; font-weight: bold;">جمعية نجمة حلوان الخيرية</div>
                 <div style="font-size: 18px;">كشف المستفيدين من التبرعات</div>
