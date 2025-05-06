@@ -125,7 +125,7 @@
             ${rec.clothesQty ? ` - ${rec.clothesQty} قطع` : ''}
             ${rec.foodQty ? ` - ${rec.foodQty} وجبات` : ''}
           </td>
-          <td class="border p-2">...........</td>
+          <td class="border p-2 text-gray-500 italic">توقيع المستفيد: ..................</td>
           <td class="border p-2">
             <button class="bg-red-500 text-white px-2 py-1 rounded" onclick="deleteRecipient(${index})">حذف</button>
           </td>
@@ -168,7 +168,6 @@
 
     printBtn.onclick = () => window.print();
 
-    // تحميل البيانات المحفوظة عند بداية التشغيل
     window.onload = loadFromLocalStorage;
   </script>
 </body>
