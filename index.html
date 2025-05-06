@@ -3,74 +3,240 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>إدارة مستفيدين التبرعات</title>
+  <title>إدارة مستفيدين التبرعات - جمعية نجمة حلوان الخيرية</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+    body {
+      font-family: 'Tajawal', sans-serif;
+    }
+    .header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    }
+    .logo-placeholder {
+      width: 60px;
+      height: 60px;
+      background-color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .signature-box {
+      border-top: 1px dashed #ccc;
+      margin-top: 30px;
+      padding-top: 15px;
+    }
+    @media print {
+      body {
+        font-size: 12pt;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .signature-box {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
 </head>
 <body class="bg-gray-100 p-6">
-  <div class="max-w-5xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
-    <h1 class="text-xl font-bold mb-4">إدارة مستفيدين التبرعات</h1>
-
-    <button id="addBtn" class="mb-4 bg-blue-600 text-white px-4 py-2 rounded">إضافة مستفيد جديد</button>
-    <button id="printBtn" class="mb-4 bg-green-600 text-white px-4 py-2 rounded">طباعة</button>
-
-    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-      <div class="bg-white p-6 rounded-2xl w-full max-w-lg">
-        <h3 id="modalTitle" class="text-lg font-bold mb-4">إضافة مستفيد</h3>
-        <form id="recipient-form" class="flex flex-col gap-4">
-          <input type="text" id="name" placeholder="اسم المستفيد" required class="border p-2 rounded" />
-          <input type="tel" id="phone" placeholder="رقم الهاتف" required class="border p-2 rounded" pattern="0[0-9]{10}" title="رقم هاتف مكون من 11 رقم يبدأ بـ0" />
-          <input type="text" id="nationalId" placeholder="الرقم القومي" required class="border p-2 rounded" pattern="\d{14}" title="الرقم القومي مكون من 14 رقم" />
-
-          <div class="flex flex-col gap-2">
-            <label class="flex items-center gap-2">
-              <input type="checkbox" name="item" value="ملابس" id="chkClothes" /> ملابس
-              <input type="number" id="clothesQty" placeholder="عدد القطع" class="border p-1 rounded hidden w-32" min="1" />
-            </label>
-            <label class="flex items-center gap-2">
-              <input type="checkbox" name="item" value="مال" /> مال
-            </label>
-            <label class="flex items-center gap-2">
-              <input type="checkbox" name="item" value="طعام" id="chkFood" /> طعام
-              <input type="number" id="foodQty" placeholder="عدد الوجبات" class="border p-1 rounded hidden w-32" min="1" />
-            </label>
-          </div>
-
-          <input type="number" id="amount" placeholder="المبلغ (اختياري)" min="0" class="border p-2 rounded" />
-
-          <label class="flex flex-col">
-            <span>تحميل مرفق (اختياري)</span>
-            <input type="file" id="attachment" accept="image/*" />
-          </label>
-          <div class="flex justify-end gap-4 mt-4">
-            <button type="button" id="cancelBtn" class="px-4 py-2 bg-gray-300 rounded">إلغاء</button>
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">حفظ</button>
-          </div>
-        </form>
+  <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+    <!-- Header with Charity Info -->
+    <div class="header text-white p-6 text-center">
+      <div class="flex justify-center items-center mb-4">
+        <!-- مكان لشعار الجمعية -->
+        <div class="logo-placeholder mr-3">
+          <img src="logo.png" alt="شعار جمعية نجمة حلوان الخيرية" class="w-12 h-12 rounded-full" onerror="this.style.display='none'; document.querySelector('.logo-placeholder').innerHTML='<span class=\'text-blue-600 font-bold\'>نجمة</span>'">
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold">جمعية نجمة حلوان الخيرية</h1>
+          <p class="text-blue-200">إدارة مستفيدين التبرعات</p>
+        </div>
       </div>
     </div>
 
-    <!-- جدول عرض البيانات -->
-    <div id="recipientsTable" class="mt-8">
-      <h2 class="text-lg font-bold mb-4">قائمة المستفيدين</h2>
-      <table class="w-full text-sm table-auto border">
-        <thead class="bg-gray-200">
-          <tr>
-            <th class="border p-2">الاسم</th>
-            <th class="border p-2">الهاتف</th>
-            <th class="border p-2">الرقم القومي</th>
-            <th class="border p-2">المساعدات</th>
-            <th class="border p-2">التوقيع</th>
-            <th class="border p-2">الإجراءات</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
+    <div class="p-6">
+      <!-- لوحة التحكم الإحصائية -->
+      <div id="dashboard" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 no-print">
+        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+          <h3 class="font-bold text-blue-800">إجمالي المستفيدين</h3>
+          <p id="totalRecipients" class="text-2xl font-bold">0</p>
+        </div>
+        <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+          <h3 class="font-bold text-green-800">المساعدات العينية</h3>
+          <p id="materialAid" class="text-2xl font-bold">0</p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg border border-purple-100">
+          <h3 class="font-bold text-purple-800">المساعدات المالية</h3>
+          <p id="financialAid" class="text-2xl font-bold">0</p>
+        </div>
+      </div>
 
-    <!-- اسم المبرمج -->
-    <footer class="text-center mt-6 text-sm text-gray-500">
-      <p>الباشمبرمج/ محمد إيهاب</p>
-    </footer>
+      <!-- أدوات التصدير والاستيراد -->
+      <div class="flex gap-2 mb-4 no-print">
+        <button onclick="exportData()" class="bg-green-500 text-white px-4 py-2 rounded flex items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+          تصدير البيانات
+        </button>
+        <button onclick="document.getElementById('importFile').click()" class="bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+          استيراد البيانات
+        </button>
+        <input type="file" id="importFile" accept=".json" class="hidden" onchange="importData(this)">
+      </div>
+
+      <!-- نظام الفلترة والبحث -->
+      <div class="mb-4 no-print">
+        <input type="text" id="searchInput" placeholder="ابحث عن مستفيد..." 
+              class="border p-2 rounded w-full md:w-1/2" oninput="filterRecipients()">
+              
+        <select id="aidTypeFilter" class="border p-2 rounded mt-2" onchange="filterRecipients()">
+          <option value="">كل أنواع المساعدات</option>
+          <option value="ملابس">ملابس</option>
+          <option value="مال">مال</option>
+          <option value="طعام">طعام</option>
+          <option value="أدوية">أدوية</option>
+        </select>
+      </div>
+
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-gray-800">سجل المستفيدين</h2>
+        <div class="flex gap-2">
+          <button id="addBtn" class="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded no-print">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            إضافة مستفيد
+          </button>
+          <button id="printBtn" class="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded no-print">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
+            </svg>
+            طباعة
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 no-print">
+        <div class="bg-white p-6 rounded-2xl w-full max-w-lg">
+          <div class="flex justify-between items-center mb-4">
+            <h3 id="modalTitle" class="text-lg font-bold text-gray-800">إضافة مستفيد جديد</h3>
+            <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          
+          <form id="recipient-form" class="flex flex-col gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">اسم المستفيد</label>
+                <input type="text" id="name" placeholder="اسم المستفيد" required class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+              <div>
+                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">رقم الهاتف</label>
+                <input type="tel" id="phone" placeholder="رقم الهاتف" required class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500" pattern="0[0-9]{10}" title="رقم هاتف مكون من 11 رقم يبدأ بـ0" />
+              </div>
+            </div>
+            
+            <div>
+              <label for="nationalId" class="block text-sm font-medium text-gray-700 mb-1">الرقم القومي</label>
+              <input type="text" id="nationalId" placeholder="الرقم القومي" required class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500" pattern="\d{14}" title="الرقم القومي مكون من 14 رقم" />
+            </div>
+            
+            <div class="border-t pt-4">
+              <h4 class="font-medium text-gray-700 mb-2">نوع المساعدة</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label class="flex items-center gap-2 p-2 border rounded hover:bg-gray-50">
+                  <input type="checkbox" name="item" value="ملابس" id="chkClothes" class="rounded text-blue-600" />
+                  <span>ملابس</span>
+                  <input type="number" id="clothesQty" placeholder="عدد القطع" class="border p-1 rounded hidden w-20" min="1" />
+                </label>
+                
+                <label class="flex items-center gap-2 p-2 border rounded hover:bg-gray-50">
+                  <input type="checkbox" name="item" value="مال" class="rounded text-blue-600" />
+                  <span>مال</span>
+                </label>
+                
+                <label class="flex items-center gap-2 p-2 border rounded hover:bg-gray-50">
+                  <input type="checkbox" name="item" value="طعام" id="chkFood" class="rounded text-blue-600" />
+                  <span>طعام</span>
+                  <input type="number" id="foodQty" placeholder="عدد الوجبات" class="border p-1 rounded hidden w-20" min="1" />
+                </label>
+                
+                <label class="flex items-center gap-2 p-2 border rounded hover:bg-gray-50">
+                  <input type="checkbox" name="item" value="أدوية" class="rounded text-blue-600" />
+                  <span>أدوية</span>
+                </label>
+              </div>
+            </div>
+            
+            <div>
+              <label for="amount" class="block text-sm font-medium text-gray-700 mb-1">المبلغ (إذا كانت المساعدة مالية)</label>
+              <input type="number" id="amount" placeholder="المبلغ بالجنيه المصري" min="0" class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+            </div>
+            
+            <div>
+              <label for="attachment" class="block text-sm font-medium text-gray-700 mb-1">تحميل صورة البطاقة (اختياري)</label>
+              <input type="file" id="attachment" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+            </div>
+            
+            <div class="flex justify-end gap-4 mt-4 pt-4 border-t">
+              <button type="button" id="cancelBtn" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded">إلغاء</button>
+              <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                حفظ
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- جدول عرض البيانات -->
+      <div id="recipientsTable" class="mt-4 overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border p-3 text-right">الاسم</th>
+              <th class="border p-3">الهاتف</th>
+              <th class="border p-3">الرقم القومي</th>
+              <th class="border p-3">نوع المساعدة</th>
+              <th class="border p-3">التوقيع</th>
+              <th class="border p-3 no-print">الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody" class="bg-white">
+            <!-- البيانات تضاف هنا عبر JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer -->
+      <footer class="mt-8 pt-4 border-t text-center text-sm text-gray-500 no-print">
+        <div class="flex justify-around items-center mt-6 signature-box">
+          <div>
+            <p class="mb-1">رئيس مجلس الإدارة</p>
+            <p class="font-bold">.....................</p>
+          </div>
+          <div>
+            <p class="mb-1">الباشمبرمج</p>
+            <p class="font-bold">محمد إيهاب</p>
+          </div>
+        </div>
+        <p class="mt-6">جميع الحقوق محفوظة &copy; <span id="currentYear"></span> جمعية نجمة حلوان الخيرية</p>
+      </footer>
+    </div>
   </div>
 
   <script>
@@ -78,6 +244,7 @@
     const form = document.getElementById('recipient-form');
     const addBtn = document.getElementById('addBtn');
     const cancelBtn = document.getElementById('cancelBtn');
+    const closeModal = document.getElementById('closeModal');
     const chkClothes = document.getElementById('chkClothes');
     const clothesQty = document.getElementById('clothesQty');
     const chkFood = document.getElementById('chkFood');
@@ -86,9 +253,14 @@
     const printBtn = document.getElementById('printBtn');
 
     let recipients = [];
+    let editIndex = null;
+
+    // Set current year in footer
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
 
     function saveToLocalStorage() {
       localStorage.setItem('donationRecipients', JSON.stringify(recipients));
+      updateDashboard();
     }
 
     function loadFromLocalStorage() {
@@ -96,38 +268,139 @@
       if (data) {
         recipients = JSON.parse(data);
         updateTable();
+        updateDashboard();
       }
     }
 
-    function openModal() {
+    function updateDashboard() {
+      document.getElementById('totalRecipients').textContent = recipients.length;
+      
+      const materialAid = recipients.filter(r => 
+        r.items.includes('ملابس') || r.items.includes('طعام') || r.items.includes('أدوية')
+      ).length;
+      
+      const financialAid = recipients.filter(r => 
+        r.items.includes('مال') && r.amount > 0
+      ).length;
+      
+      document.getElementById('materialAid').textContent = materialAid;
+      document.getElementById('financialAid').textContent = financialAid;
+    }
+
+    function openModal(editId = null) {
       form.reset();
       clothesQty.classList.add('hidden');
       foodQty.classList.add('hidden');
       modal.classList.remove('hidden');
+      
+      if (editId !== null) {
+        document.getElementById('modalTitle').textContent = 'تعديل بيانات مستفيد';
+        const recipient = recipients[editId];
+        
+        document.getElementById('name').value = recipient.name;
+        document.getElementById('phone').value = recipient.phone;
+        document.getElementById('nationalId').value = recipient.nationalId;
+        document.getElementById('amount').value = recipient.amount || '';
+        
+        // Set checkboxes
+        document.querySelectorAll('input[name="item"]').forEach(checkbox => {
+          checkbox.checked = recipient.items.includes(checkbox.value);
+        });
+        
+        if (recipient.clothesQty) {
+          chkClothes.checked = true;
+          clothesQty.classList.remove('hidden');
+          clothesQty.value = recipient.clothesQty;
+        }
+        
+        if (recipient.foodQty) {
+          chkFood.checked = true;
+          foodQty.classList.remove('hidden');
+          foodQty.value = recipient.foodQty;
+        }
+        
+        editIndex = editId;
+      } else {
+        document.getElementById('modalTitle').textContent = 'إضافة مستفيد جديد';
+        editIndex = null;
+      }
     }
 
-    addBtn.onclick = openModal;
-    cancelBtn.onclick = () => modal.classList.add('hidden');
+    function closeModalWindow() {
+      modal.classList.add('hidden');
+      editIndex = null;
+    }
 
-    chkClothes.onchange = () => clothesQty.classList.toggle('hidden', !chkClothes.checked);
-    chkFood.onchange = () => foodQty.classList.toggle('hidden', !chkFood.checked);
+    addBtn.onclick = () => openModal();
+    cancelBtn.onclick = closeModalWindow;
+    closeModal.onclick = closeModalWindow;
+
+    chkClothes.onchange = () => {
+      clothesQty.classList.toggle('hidden', !chkClothes.checked);
+      if (chkClothes.checked) clothesQty.focus();
+    };
+    
+    chkFood.onchange = () => {
+      foodQty.classList.toggle('hidden', !chkFood.checked);
+      if (chkFood.checked) foodQty.focus();
+    };
 
     function updateTable() {
+      filterRecipients(); // This will render the filtered table
+    }
+
+    function filterRecipients() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const aidType = document.getElementById('aidTypeFilter').value;
+      
+      const filtered = recipients.filter(recipient => {
+        const matchesSearch = recipient.name.toLowerCase().includes(searchTerm) || 
+                             recipient.phone.includes(searchTerm) ||
+                             recipient.nationalId.includes(searchTerm);
+        
+        const matchesAidType = !aidType || recipient.items.includes(aidType);
+        
+        return matchesSearch && matchesAidType;
+      });
+      
+      renderFilteredTable(filtered);
+    }
+
+    function renderFilteredTable(filteredRecipients) {
       tableBody.innerHTML = "";
-      recipients.forEach((rec, index) => {
+      
+      if (filteredRecipients.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="border p-4 text-center text-gray-500">لا توجد نتائج مطابقة</td>
+          </tr>
+        `;
+        return;
+      }
+      
+      filteredRecipients.forEach((rec, index) => {
         const row = document.createElement('tr');
+        row.className = 'hover:bg-gray-50';
         row.innerHTML = `
-          <td class="border p-2">${rec.name}</td>
-          <td class="border p-2">${rec.phone}</td>
-          <td class="border p-2">${rec.nationalId}</td>
-          <td class="border p-2">
-            ${rec.items.join(', ')}
-            ${rec.clothesQty ? ` - ${rec.clothesQty} قطع` : ''}
-            ${rec.foodQty ? ` - ${rec.foodQty} وجبات` : ''}
+          <td class="border p-3">${rec.name}</td>
+          <td class="border p-3">${rec.phone}</td>
+          <td class="border p-3">${rec.nationalId}</td>
+          <td class="border p-3">
+            ${rec.items.join('، ')}
+            ${rec.clothesQty ? ` (${rec.clothesQty} قطعة)` : ''}
+            ${rec.foodQty ? ` (${rec.foodQty} وجبة)` : ''}
+            ${rec.amount ? ` - ${rec.amount} ج.م` : ''}
           </td>
-          <td class="border p-2 text-gray-500 italic">توقيع المستفيد: ..................</td>
-          <td class="border p-2">
-            <button class="bg-red-500 text-white px-2 py-1 rounded" onclick="deleteRecipient(${index})">حذف</button>
+          <td class="border p-3 text-gray-500 italic">.................</td>
+          <td class="border p-3 no-print">
+            <div class="flex gap-2 justify-center">
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs" onclick="openModal(${recipients.indexOf(rec)})">
+                تعديل
+              </button>
+              <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs" onclick="deleteRecipient(${recipients.indexOf(rec)})">
+                حذف
+              </button>
+            </div>
           </td>
         `;
         tableBody.appendChild(row);
@@ -135,9 +408,45 @@
     }
 
     function deleteRecipient(index) {
-      recipients.splice(index, 1);
-      saveToLocalStorage();
-      updateTable();
+      if (confirm('هل أنت متأكد من حذف هذا المستفيد؟')) {
+        recipients.splice(index, 1);
+        saveToLocalStorage();
+        updateTable();
+      }
+    }
+
+    function exportData() {
+      const data = JSON.stringify(recipients, null, 2);
+      const blob = new Blob([data], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `donation_recipients_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+    }
+
+    function importData(input) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if(Array.isArray(data)) {
+            recipients = data;
+            saveToLocalStorage();
+            updateTable();
+            alert('تم استيراد البيانات بنجاح!');
+          } else {
+            throw new Error('صيغة الملف غير صحيحة');
+          }
+        } catch(err) {
+          alert('خطأ في استيراد البيانات: ' + err.message);
+        }
+      };
+      
+      reader.readAsText(file);
     }
 
     form.onsubmit = e => {
@@ -153,20 +462,111 @@
         name,
         phone,
         nationalId,
-        amount,
+        amount: amount || null,
         items,
         clothesQty: chkClothes.checked ? clothesQty.value : null,
         foodQty: chkFood.checked ? foodQty.value : null,
         attachment: attachment ? attachment.name : null,
+        date: new Date().toLocaleDateString('ar-EG')
       };
 
-      recipients.push(details);
+      if (editIndex !== null) {
+        // Update existing recipient
+        recipients[editIndex] = details;
+      } else {
+        // Add new recipient
+        recipients.push(details);
+      }
+      
       saveToLocalStorage();
       updateTable();
-      modal.classList.add('hidden');
+      closeModalWindow();
+      
+      alert(editIndex !== null ? 'تم تحديث بيانات المستفيد بنجاح' : 'تم إضافة المستفيد بنجاح');
     };
 
-    printBtn.onclick = () => window.print();
+    printBtn.onclick = () => {
+      // Create a print-friendly version
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="ar" dir="rtl">
+        <head>
+          <meta charset="UTF-8">
+          <title>كشف مستفيدين جمعية نجمة حلوان الخيرية</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            h1 { text-align: center; margin-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+            th { background-color: #f2f2f2; }
+            .header { text-align: center; margin-bottom: 30px; }
+            .logo-container { display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
+            .logo { width: 80px; height: 80px; object-fit: contain; margin-left: 15px; }
+            .date { text-align: left; margin-top: 30px; }
+            .signatures { display: flex; justify-content: space-around; margin-top: 40px; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div class="logo-container">
+              <img src="logo.png" alt="شعار الجمعية" class="logo" onerror="this.style.display='none'">
+              <div>
+                <div style="font-size: 24px; font-weight: bold;">جمعية نجمة حلوان الخيرية</div>
+                <div style="font-size: 18px;">كشف المستفيدين من التبرعات</div>
+              </div>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>م</th>
+                <th>الاسم</th>
+                <th>الهاتف</th>
+                <th>الرقم القومي</th>
+                <th>نوع المساعدة</th>
+                <th>التوقيع</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${recipients.map((rec, idx) => `
+                <tr>
+                  <td>${idx + 1}</td>
+                  <td>${rec.name}</td>
+                  <td>${rec.phone}</td>
+                  <td>${rec.nationalId}</td>
+                  <td>
+                    ${rec.items.join('، ')}
+                    ${rec.clothesQty ? ` (${rec.clothesQty} قطعة)` : ''}
+                    ${rec.foodQty ? ` (${rec.foodQty} وجبة)` : ''}
+                    ${rec.amount ? ` - ${rec.amount} ج.م` : ''}
+                  </td>
+                  <td style="width: 150px;">.................</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div class="signatures">
+            <div>
+              <p>رئيس مجلس الإدارة</p>
+              <p style="margin-top: 30px;">.....................</p>
+            </div>
+            <div>
+              <p>الباشمبرمج</p>
+              <p style="margin-top: 30px;">محمد إيهاب</p>
+            </div>
+          </div>
+          <div class="date">
+            تاريخ الطباعة: ${new Date().toLocaleDateString('ar-EG')}
+          </div>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.print();
+      }, 500);
+    };
 
     window.onload = loadFromLocalStorage;
   </script>
