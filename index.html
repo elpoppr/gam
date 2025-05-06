@@ -13,10 +13,13 @@
     .header {
       background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
     }
-    .star-icon {
-      color: gold;
-      text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
-      font-size: 2.5rem;
+    .logo-img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     @media print {
       body {
@@ -36,6 +39,11 @@
       .responsive-text {
         font-size: 1.5rem;
       }
+      .logo-img {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 10px;
+      }
     }
   </style>
 </head>
@@ -44,10 +52,8 @@
     <!-- Header with Charity Info -->
     <div class="header text-white p-4 sm:p-6 text-center">
       <div class="flex justify-center items-center mb-4 responsive-flex">
-        <!-- نجمة الجمعية -->
-        <div class="star-icon mr-3">
-          ★
-        </div>
+        <!-- شعار الجمعية -->
+        <img src="logo.jpg" alt="شعار جمعية نجمة حلوان الخيرية" class="logo-img mr-3" onerror="this.style.display='none'">
         <div>
           <h1 class="text-xl sm:text-2xl font-bold responsive-text">جمعية نجمة حلوان الخيرية</h1>
           <p class="text-blue-200 text-sm sm:text-base">إدارة مستفيدين التبرعات</p>
@@ -499,7 +505,7 @@
             th { background-color: #f2f2f2; }
             .header { text-align: center; margin-bottom: 30px; }
             .logo-container { display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
-            .star-icon { font-size: 2rem; color: gold; margin-left: 15px; }
+            .logo { width: 80px; height: 80px; object-fit: contain; margin-left: 15px; }
             .date { text-align: left; margin-top: 30px; }
             .signatures { display: flex; justify-content: space-around; margin-top: 40px; }
           </style>
@@ -507,7 +513,7 @@
         <body>
           <div class="header">
             <div class="logo-container">
-              <div class="star-icon">★</div>
+              <img src="logo.jpg" alt="شعار الجمعية" class="logo" onerror="this.style.display='none'">
               <div>
                 <div style="font-size: 24px; font-weight: bold;">جمعية نجمة حلوان الخيرية</div>
                 <div style="font-size: 18px;">كشف المستفيدين من التبرعات</div>
